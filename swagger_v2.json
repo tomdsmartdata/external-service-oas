@@ -1,0 +1,869 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "enosix schema document",
+    "version": "1.1.0"
+  },
+  "paths": {
+    "/api/sap/SFCISalesDocument/search": {
+      "post": {
+        "summary": "SalesDocumentSearch",
+        "description": "## Purpose\n\nUse this search command to find specific sales documents in SAP.\n\n<br/>\n\nOften, you use a Sales Document Search as a starting point for creating\na workflow, such as retrieving detailed information about a sales\ndocument. For example, this search command returns a `salesDocument`\nstring for each sales document record that's retrieved from SAP. Then\nyou can call the associated Sales Document Detail command with that\n`salesDocument` string to retrieve details about a specific sales\ndocument.  \n\n<br/><br/>\n\n### Code Sample: Search by Sold To Party and Sales Document Type \n(`\"OR\"` = Standard Sales Order)\n\n````Json\n\n{\n  \"Searchparams\": {\n    \"SoldToParty\": \"500070\"\n  },\n  \"Salesdoctype\": [\n    {\n      \"SalesDocumentType\": \"OR\"\n    }\n  ],\n  \"PagingOptions\": {\n    \"PageSize\": 10,\n    \"PageNumber\": 1\n  }\n}\n````\n",
+        "operationId": "SalesDocumentSearch",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/sap-language"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SFCISalesDocumentSc"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SFCISalesDocumentSr"
+                }
+              }
+            }
+          }
+        },
+        "x-enosix-sapobject": "SFCISalesDocument",
+        "x-enosix-operation": "search",
+        "x-enosix-connection": "ECC"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SFCISalesDocumentSc": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "Searchparams": {
+                "$ref": "#/components/schemas/SFCISalesDocumentSearchparams"
+              },
+              "Salesdoctype": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SFCISalesDocumentSalesdoctype"
+                }
+              },
+              "ChangedDate": {
+                "$ref": "#/components/schemas/SFCISalesDocumentChangedDate"
+              },
+              "Custom": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SFCISalesDocumentCustom"
+                }
+              }
+            },
+            "x-enosix-sapobject": "SFCISalesDocument",
+            "x-enosix-connection": "ECC",
+            "x-enosix-searchcontext": true,
+            "x-enosix-sapname": "SFCISalesDocument_SC"
+          },
+          {
+            "$ref": "#/components/schemas/SearchContext"
+          }
+        ]
+      },
+      "SFCISalesDocumentSearchparams": {
+        "type": "object",
+        "properties": {
+          "FromSalesDocumentNumber": {
+            "maxLength": 10,
+            "type": "string",
+            "description": "Sales Document",
+            "x-enosix-sapname": "VBELN_FR",
+            "x-enosix-saptype": "VBELN_VA"
+          },
+          "ToSalesDocumentNumber": {
+            "maxLength": 10,
+            "type": "string",
+            "description": "Sales Document",
+            "x-enosix-sapname": "VBELN_TO",
+            "x-enosix-saptype": "VBELN_VA"
+          },
+          "SoldToParty": {
+            "maxLength": 10,
+            "type": "string",
+            "description": "Sold-to party",
+            "x-enosix-sapname": "KUNAG",
+            "x-enosix-saptype": "KUNAG"
+          },
+          "ShipToParty": {
+            "maxLength": 10,
+            "type": "string",
+            "description": "Ship-to party",
+            "x-enosix-sapname": "KUNWE",
+            "x-enosix-saptype": "KUNWE"
+          },
+          "CustomerPONumber": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "Customer purchase order number",
+            "x-enosix-sapname": "BSTNK",
+            "x-enosix-saptype": "BSTNK"
+          },
+          "Material": {
+            "maxLength": 18,
+            "type": "string",
+            "description": "Material Number",
+            "x-enosix-sapname": "MATNR",
+            "x-enosix-saptype": "MATNR"
+          },
+          "TransactionGroup": {
+            "maxLength": 1,
+            "type": "string",
+            "description": "Transaction group",
+            "x-enosix-sapname": "TRVOG",
+            "x-enosix-saptype": "TRVOG"
+          },
+          "FromCreateDate": {
+            "type": "string",
+            "description": "Date on Which Record Was Created",
+            "format": "date",
+            "x-enosix-sapname": "ERDAT_FR",
+            "x-enosix-saptype": "ERDAT"
+          },
+          "ToCreateDate": {
+            "type": "string",
+            "description": "Date on Which Record Was Created",
+            "format": "date",
+            "x-enosix-sapname": "ERDAT_TO",
+            "x-enosix-saptype": "ERDAT"
+          },
+          "OpenOnly": {
+            "type": "boolean",
+            "description": "Checkbox",
+            "x-enosix-sapname": "X_OPENONLY",
+            "x-enosix-saptype": "XFELD"
+          },
+          "CompletedOnly": {
+            "type": "boolean",
+            "description": "Checkbox",
+            "x-enosix-sapname": "X_COMPLETEDONLY",
+            "x-enosix-saptype": "XFELD"
+          },
+          "Username": {
+            "maxLength": 12,
+            "type": "string",
+            "description": "User Name",
+            "x-enosix-sapname": "USERNAME",
+            "x-enosix-saptype": "UNAME"
+          },
+          "SalesDocumentVersionNumber": {
+            "maxLength": 12,
+            "type": "string",
+            "description": "Sales document version number",
+            "x-enosix-sapname": "VSNMR_V",
+            "x-enosix-saptype": "VSNMR_V"
+          },
+          "YourReference": {
+            "maxLength": 12,
+            "type": "string",
+            "description": "Your Reference",
+            "x-enosix-sapname": "IHREZ",
+            "x-enosix-saptype": "IHREZ"
+          },
+          "ShipToPurchaseOrderNumber": {
+            "maxLength": 35,
+            "type": "string",
+            "description": "Ship-to Party's Purchase Order Number",
+            "x-enosix-sapname": "BSTKD_E",
+            "x-enosix-saptype": "BSTKD_E"
+          },
+          "DeliveryBlock": {
+            "type": "boolean",
+            "description": "Checkbox",
+            "x-enosix-sapname": "X_DELIVERY_BLOCK",
+            "x-enosix-saptype": "XFELD"
+          },
+          "BillingBlock": {
+            "type": "boolean",
+            "description": "Checkbox",
+            "x-enosix-sapname": "X_BILLING_BLOCK",
+            "x-enosix-saptype": "XFELD"
+          },
+          "CreditBlock": {
+            "type": "boolean",
+            "description": "Checkbox",
+            "x-enosix-sapname": "X_CREDIT_BLOCK",
+            "x-enosix-saptype": "XFELD"
+          }
+        },
+        "x-enosix-sapobject": "SFCISalesDocument",
+        "x-enosix-connection": "ECC",
+        "x-enosix-sapname": "SEARCHPARAMS"
+      },
+      "SFCISalesDocumentSalesdoctype": {
+        "type": "object",
+        "properties": {
+          "SalesDocumentType": {
+            "maxLength": 4,
+            "type": "string",
+            "description": "Sales Document Type",
+            "x-enosix-sapname": "AUART",
+            "x-enosix-saptype": "AUART"
+          },
+          "TableRowState": {
+            "$ref": "#/components/schemas/TableRowState"
+          }
+        },
+        "x-enosix-sapobject": "SFCISalesDocument",
+        "x-enosix-connection": "ECC",
+        "x-enosix-sapname": "SALESDOCTYPE"
+      },
+      "SFCISalesDocumentChangedDate": {
+        "type": "object",
+        "properties": {
+          "ChangedDateBegin": {
+            "type": "string",
+            "description": "Date",
+            "format": "date",
+            "x-enosix-sapname": "CHBDATE",
+            "x-enosix-saptype": "DATUM"
+          },
+          "ChangedDateEnd": {
+            "type": "string",
+            "description": "Date",
+            "format": "date",
+            "x-enosix-sapname": "CHEDATE",
+            "x-enosix-saptype": "DATUM"
+          }
+        },
+        "x-enosix-sapobject": "SFCISalesDocument",
+        "x-enosix-connection": "ECC",
+        "x-enosix-sapname": "CHANGED_DATE"
+      },
+      "SFCISalesDocumentCustom": {
+        "type": "object",
+        "properties": {
+          "Field": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Field",
+            "x-enosix-sapname": "FIELD"
+          },
+          "Value": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Value",
+            "x-enosix-sapname": "VALUE"
+          },
+          "TableRowState": {
+            "$ref": "#/components/schemas/TableRowState"
+          }
+        },
+        "x-enosix-sapobject": "SFCISalesDocument",
+        "x-enosix-connection": "ECC",
+        "x-enosix-sapname": "CUSTOM"
+      },
+      "SFCISalesDocumentSr": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "Searchresult": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SFCISalesDocumentSearchresult"
+                }
+              }
+            },
+            "x-enosix-sapobject": "SFCISalesDocument",
+            "x-enosix-connection": "ECC",
+            "x-enosix-searchresult": true,
+            "x-enosix-sapname": "SFCISalesDocument_SR"
+          },
+          {
+            "$ref": "#/components/schemas/SearchResult"
+          }
+        ]
+      },
+      "SFCISalesDocumentSearchresult": {
+        "type": "object",
+        "properties": {
+          "SalesDocument": {
+            "maxLength": 10,
+            "type": "string",
+            "description": "Sales Document",
+            "x-enosix-sapname": "VBELN",
+            "x-enosix-saptype": "VBELN_VA"
+          },
+          "CustomerPONumber": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "Customer purchase order number",
+            "x-enosix-sapname": "BSTNK",
+            "x-enosix-saptype": "BSTNK"
+          },
+          "CreateDate": {
+            "type": "string",
+            "description": "Date on Which Record Was Created",
+            "format": "date",
+            "x-enosix-sapname": "ERDAT",
+            "x-enosix-saptype": "ERDAT"
+          },
+          "SalesDocumentType": {
+            "maxLength": 4,
+            "type": "string",
+            "description": "Sales Document Type",
+            "x-enosix-sapname": "AUART",
+            "x-enosix-saptype": "AUART"
+          },
+          "SalesDocumentTypeDescription": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "Description",
+            "x-enosix-sapname": "AUART_TEXT",
+            "x-enosix-saptype": "BEZEI20"
+          },
+          "SoldToParty": {
+            "maxLength": 10,
+            "type": "string",
+            "description": "Sold-to party",
+            "x-enosix-sapname": "KUNAG",
+            "x-enosix-saptype": "KUNAG"
+          },
+          "SoldToName": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Name",
+            "x-enosix-sapname": "KUNAG_NAME",
+            "x-enosix-saptype": "NAME1"
+          },
+          "SoldToCity": {
+            "maxLength": 40,
+            "type": "string",
+            "description": "City",
+            "x-enosix-sapname": "KUNAG_CITY1",
+            "x-enosix-saptype": "AD_CITY1"
+          },
+          "SoldToRegion": {
+            "maxLength": 3,
+            "type": "string",
+            "description": "Region (State, Province, County)",
+            "x-enosix-sapname": "KUNAG_REGION",
+            "x-enosix-saptype": "REGIO"
+          },
+          "SoldToRegionDescription": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "Description",
+            "x-enosix-sapname": "KUNAG_REGION_BEZEI",
+            "x-enosix-saptype": "BEZEI20"
+          },
+          "SoldToCountry": {
+            "maxLength": 3,
+            "type": "string",
+            "description": "Country Key",
+            "x-enosix-sapname": "KUNAG_COUNTRY",
+            "x-enosix-saptype": "LAND1"
+          },
+          "SoldToCountryDescription": {
+            "maxLength": 50,
+            "type": "string",
+            "description": "Country Name (Max. 50 Characters)",
+            "x-enosix-sapname": "KUNAG_COUNTRY_LANDX",
+            "x-enosix-saptype": "LANDX50"
+          },
+          "ShipToParty": {
+            "maxLength": 10,
+            "type": "string",
+            "description": "Ship-to party",
+            "x-enosix-sapname": "KUNWE",
+            "x-enosix-saptype": "KUNWE"
+          },
+          "ShipToName": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Name",
+            "x-enosix-sapname": "KUNWE_NAME",
+            "x-enosix-saptype": "NAME1"
+          },
+          "ShipToCity": {
+            "maxLength": 40,
+            "type": "string",
+            "description": "City",
+            "x-enosix-sapname": "KUNWE_CITY1",
+            "x-enosix-saptype": "AD_CITY1"
+          },
+          "ShipToRegion": {
+            "maxLength": 3,
+            "type": "string",
+            "description": "Region (State, Province, County)",
+            "x-enosix-sapname": "KUNWE_REGION",
+            "x-enosix-saptype": "REGIO"
+          },
+          "ShipToRegionDescription": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "Description",
+            "x-enosix-sapname": "KUNWE_REGION_BEZEI",
+            "x-enosix-saptype": "BEZEI20"
+          },
+          "ShipToCountry": {
+            "maxLength": 3,
+            "type": "string",
+            "description": "Country Key",
+            "x-enosix-sapname": "KUNWE_COUNTRY",
+            "x-enosix-saptype": "LAND1"
+          },
+          "ShipToCountryDescription": {
+            "maxLength": 50,
+            "type": "string",
+            "description": "Country Name (Max. 50 Characters)",
+            "x-enosix-sapname": "KUNWE_COUNTRY_LANDX",
+            "x-enosix-saptype": "LANDX50"
+          },
+          "NetValueInDocumentCurrency": {
+            "type": "number",
+            "description": "Net Value in Document Currency",
+            "x-enosix-sapname": "NETWR",
+            "x-enosix-saptype": "NETWR"
+          },
+          "TaxAmountInDocumentCurrency": {
+            "type": "number",
+            "description": "Tax amount in document currency",
+            "x-enosix-sapname": "MWSBP",
+            "x-enosix-saptype": "MWSBP"
+          },
+          "SDDocumentCurrency": {
+            "maxLength": 5,
+            "type": "string",
+            "description": "SD Document Currency",
+            "x-enosix-sapname": "WAERK",
+            "x-enosix-saptype": "WAERK"
+          },
+          "OrderStatus": {
+            "maxLength": 10,
+            "type": "string",
+            "description": "Text (10 Characters)",
+            "x-enosix-sapname": "ORDERSTATUS",
+            "x-enosix-saptype": "TEXT10"
+          },
+          "SalesDocumentVersionNumber": {
+            "maxLength": 12,
+            "type": "string",
+            "description": "Sales document version number",
+            "x-enosix-sapname": "VSNMR_V",
+            "x-enosix-saptype": "VSNMR_V"
+          },
+          "YourReference": {
+            "maxLength": 12,
+            "type": "string",
+            "description": "Your Reference",
+            "x-enosix-sapname": "IHREZ",
+            "x-enosix-saptype": "IHREZ"
+          },
+          "ShipToPurchaseOrderNumber": {
+            "maxLength": 35,
+            "type": "string",
+            "description": "Ship-to Party's Purchase Order Number",
+            "x-enosix-sapname": "BSTKD_E",
+            "x-enosix-saptype": "BSTKD_E"
+          },
+          "TransactionGroup": {
+            "maxLength": 1,
+            "type": "string",
+            "description": "Transaction group",
+            "x-enosix-sapname": "TRVOG",
+            "x-enosix-saptype": "TRVOG"
+          },
+          "DeliveryBlock": {
+            "maxLength": 2,
+            "type": "string",
+            "description": "Delivery block (document header)",
+            "x-enosix-sapname": "LIFSK",
+            "x-enosix-saptype": "LIFSK"
+          },
+          "DeliveryBlockDescription": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "Description",
+            "x-enosix-sapname": "LIFSK_TEXT",
+            "x-enosix-saptype": "BEZEI_LIFSP"
+          },
+          "BillingBlock": {
+            "maxLength": 2,
+            "type": "string",
+            "description": "Billing block in SD document",
+            "x-enosix-sapname": "FAKSK",
+            "x-enosix-saptype": "FAKSK"
+          },
+          "BillingBlockDescription": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "Description",
+            "x-enosix-sapname": "FAKSK_TEXT",
+            "x-enosix-saptype": "BEZEI_FAKSP"
+          },
+          "CreditBlock": {
+            "maxLength": 1,
+            "type": "string",
+            "description": "Overall status of credit checks",
+            "x-enosix-sapname": "CMGST",
+            "x-enosix-saptype": "CMGST"
+          },
+          "CreditBlockDescription": {
+            "maxLength": 50,
+            "type": "string",
+            "description": "Text Field",
+            "x-enosix-sapname": "CMGST_TEXT",
+            "x-enosix-saptype": "TEXT50"
+          },
+          "DeliveryStatus": {
+            "maxLength": 2,
+            "type": "string",
+            "description": "Delivery State",
+            "x-enosix-sapname": "DLVSTS",
+            "x-enosix-saptype": "/ENSXSFCI/SD_DLVSTS"
+          },
+          "DeliveryStatusDescription": {
+            "maxLength": 40,
+            "type": "string",
+            "description": "Text, 40 Characters Long",
+            "x-enosix-sapname": "DLVSTS_TEXT",
+            "x-enosix-saptype": "TEXT40"
+          },
+          "TotalQuantity": {
+            "type": "number",
+            "description": "Quantity",
+            "x-enosix-sapname": "TOTQTY",
+            "x-enosix-saptype": "MENGE_D"
+          },
+          "GoodsIssuedQuantity": {
+            "type": "number",
+            "description": "Quantity",
+            "x-enosix-sapname": "PGIQTY",
+            "x-enosix-saptype": "MENGE_D"
+          },
+          "LastChangedDate": {
+            "type": "string",
+            "description": "Changed On",
+            "format": "date",
+            "x-enosix-sapname": "AEDAT",
+            "x-enosix-saptype": "AEDAT"
+          },
+          "StartDate": {
+            "type": "string",
+            "description": "Contract start date",
+            "format": "date",
+            "x-enosix-sapname": "VBEGDAT",
+            "x-enosix-saptype": "VBDAT_VEDA"
+          },
+          "EndDate": {
+            "type": "string",
+            "description": "Contract end date",
+            "format": "date",
+            "x-enosix-sapname": "VENDDAT",
+            "x-enosix-saptype": "VNDAT_VEDA"
+          },
+          "CUSTOM01": {
+            "type": "string",
+            "description": "Custom Field 1",
+            "x-enosix-sapname": "CUSTOM01"
+          },
+          "CUSTOM02": {
+            "type": "string",
+            "description": "Custom Field 2",
+            "x-enosix-sapname": "CUSTOM02"
+          },
+          "CUSTOM03": {
+            "type": "string",
+            "description": "Custom Field 3",
+            "x-enosix-sapname": "CUSTOM03"
+          },
+          "CUSTOM04": {
+            "type": "string",
+            "description": "Custom Field 4",
+            "x-enosix-sapname": "CUSTOM04"
+          },
+          "CUSTOM05": {
+            "type": "string",
+            "description": "Custom Field 5",
+            "x-enosix-sapname": "CUSTOM05"
+          },
+          "CUSTOM06": {
+            "type": "string",
+            "description": "Custom Field 6",
+            "x-enosix-sapname": "CUSTOM06"
+          },
+          "CUSTOM07": {
+            "type": "string",
+            "description": "Custom Field 7",
+            "x-enosix-sapname": "CUSTOM07"
+          },
+          "CUSTOM08": {
+            "type": "string",
+            "description": "Custom Field 8",
+            "x-enosix-sapname": "CUSTOM08"
+          },
+          "CUSTOM09": {
+            "type": "string",
+            "description": "Custom Field 9",
+            "x-enosix-sapname": "CUSTOM09"
+          },
+          "CUSTOM10": {
+            "type": "string",
+            "description": "Custom Field 10",
+            "x-enosix-sapname": "CUSTOM10"
+          },
+          "TableRowState": {
+            "$ref": "#/components/schemas/TableRowState"
+          }
+        },
+        "x-enosix-sapobject": "SFCISalesDocument",
+        "x-enosix-connection": "ECC",
+        "x-enosix-sapname": "SEARCHRESULT"
+      },
+      "SearchContext": {
+        "type": "object",
+        "properties": {
+          "PagingOptions": {
+            "$ref": "#/components/schemas/PagingOptions"
+          }
+        }
+      },
+      "Result": {
+        "type": "object",
+        "properties": {
+          "Messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReturnMessage"
+            },
+            "x-enosix-sapname": "MESSAGES"
+          },
+          "Success": {
+            "type": "boolean",
+            "description": "Operation successful, if not check messages for errors",
+            "x-enosix-sapname": "SUCCESS"
+          }
+        }
+      },
+      "SearchResult": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "PagingInfo": {
+                "$ref": "#/components/schemas/PagingInfo"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/Result"
+          }
+        ]
+      },
+      "DetailKey": {
+        "maxLength": 70,
+        "type": "string",
+        "description": "SAP Object Key"
+      },
+      "DetailResult": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "Key": {
+                "$ref": "#/components/schemas/DetailKey"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/Result"
+          }
+        ]
+      },
+      "PagingOptions": {
+        "type": "object",
+        "properties": {
+          "PageSize": {
+            "type": "integer",
+            "description": "Number of entries per page to list in the results",
+            "format": "int32",
+            "default": 10,
+            "nullable": true,
+            "x-enosix-sapname": "PAGE_SIZE"
+          },
+          "PageNumber": {
+            "type": "integer",
+            "description": "Number of results pages to return",
+            "format": "int32",
+            "default": 0,
+            "x-enosix-sapname": "PAGE_NUMBER"
+          },
+          "SortFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortField"
+            },
+            "description": "an array with one element per field that determines which fields to use for sorting the results",
+            "nullable": true,
+            "x-enosix-sapname": "SORT_FIELDS"
+          }
+        },
+        "description": "\n### Define the Order and Number of Search Results\n`pagingOptions` is an optional structure that you can include with the input parameters JSON. Use `pagingOptions` to define the order and number of search results.",
+        "nullable": true
+      },
+      "SortField": {
+        "type": "object",
+        "properties": {
+          "Precedence": {
+            "type": "integer",
+            "description": "determines the sorting order precedence (1 = highest precedence)",
+            "format": "int32",
+            "x-enosix-sapname": "PRECEDENCE"
+          },
+          "FieldName": {
+            "type": "string",
+            "description": "indicates which field to use for sorting precedence",
+            "x-enosix-sapname": "FIELD_NAME"
+          },
+          "SortDirection": {
+            "enum": [
+              "A",
+              "D"
+            ],
+            "type": "string",
+            "description": "Sort Direction Values:\n  * `A` - Ascending\n  * `D` - Descending\n",
+            "default": "A",
+            "x-enosix-sapname": "SORT_DIRECTION"
+          }
+        },
+        "x-enosix-sapname": "SEARCH_SORT_FIELD"
+      },
+      "PagingInfo": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "TotalRecords": {
+                "type": "integer",
+                "format": "int64",
+                "x-enosix-sapname": "TOTAL_RECORDS"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/PagingOptions"
+          }
+        ],
+        "x-enosix-sapname": "E_PAGING_INFO"
+      },
+      "TableRowState": {
+        "enum": [
+          "M",
+          "I"
+        ],
+        "type": "string",
+        "description": "What operation to perform on the table row Values:\n  * `M` - Modified\n  * `I` - Inserted\n    \n",
+        "nullable": true,
+        "writeOnly": true,
+        "x-enosix-sapname": "tablerowstate"
+      },
+      "ReturnMessage": {
+        "type": "object",
+        "properties": {
+          "MessageType": {
+            "enum": [
+              "S",
+              "W",
+              "E",
+              "I",
+              "A",
+              "X"
+            ],
+            "type": "string",
+            "description": "Values:\n * `S`- Success\n * `W` - Warning\n * `E` - Error\n * `I` - Info\n * `A` - AbnormalEnd\n * `X` - SAPExit\n",
+            "nullable": true,
+            "x-enosix-sapname": "TYPE"
+          },
+          "MessageId": {
+            "maxLength": 20,
+            "type": "string",
+            "x-enosix-sapname": "ID"
+          },
+          "MessageNumber": {
+            "maxLength": 3,
+            "type": "string",
+            "x-enosix-sapname": "NUMBER"
+          },
+          "Message": {
+            "maxLength": 220,
+            "type": "string",
+            "x-enosix-sapname": "MESSAGE"
+          },
+          "MessageV1": {
+            "maxLength": 50,
+            "type": "string",
+            "x-enosix-sapname": "MESSAGE_V1"
+          },
+          "MessageV2": {
+            "maxLength": 50,
+            "type": "string",
+            "x-enosix-sapname": "MESSAGE_V2"
+          },
+          "MessageV3": {
+            "maxLength": 50,
+            "type": "string",
+            "x-enosix-sapname": "MESSAGE_V3"
+          },
+          "MessageV4": {
+            "maxLength": 50,
+            "type": "string",
+            "x-enosix-sapname": "MESSAGE_V4"
+          }
+        }
+      }
+    },
+    "parameters": {
+      "sap-language": {
+        "name": "Language",
+        "in": "header",
+        "style": "simple",
+        "schema": {
+          "type": "string"
+        },
+        "example": "EN",
+        "x-enosix-sapname": "sap-language"
+      },
+      "key": {
+        "name": "Key",
+        "in": "path",
+        "description": "The RIO Key.",
+        "required": true,
+        "style": "simple",
+        "schema": {
+          "$ref": "#/components/schemas/DetailKey"
+        },
+        "example": "$*$"
+      }
+    },
+    "securitySchemes": {
+      "SAP User": {
+        "type": "http",
+        "scheme": "basic"
+      }
+    }
+  },
+  "security": [
+    {
+      "SAP User": [ ]
+    }
+  ]
+}
